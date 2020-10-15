@@ -1,5 +1,12 @@
-FROM microsoft/windowsservercore:1803
+FROM mcr.microsoft.com/windows/servercore:1803 as baseimage
 
 #Install Chocolately
 RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex" 
-#RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; choco install -y visualstudio2019buildtools"
+#RUN powershell -NoProfile -ExecutionPolicy Bypass -Command "[Net.ServicePointManager]::SecurityProtocol = \"tls12, tls11, tls\"; iex ((New-Object System.Net.WebClient).DownloadString('http://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+# suppress the "restart required" error code (3010)
+RUN choco install -y --ignore-package-exit-codes=3010 dotnetfx
+
+FROM baseImage
+#Install VS2019
+RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; choco install -y  visualstudio2019buildtools --includeRecommended"

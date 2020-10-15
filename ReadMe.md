@@ -1,13 +1,13 @@
 
 # Learning Docker
 
-##  1. <a name='LearningPlan'></a>Learning Plan
+##  Learning Plan
 
 * Setup Rest Api ( IIS hosted)
 * parse Dockerfile
 * Docker basics
 
-##  2. <a name='SetupRestApi'></a>Setup Rest Api
+##  Setup Rest Api
 
 Create new project in VS2019: . NET Full Framework Web Application for Web API, I choose with docker and https support.
 Enabling Docker Support here triggered the download of the required layers.
@@ -26,9 +26,9 @@ Takes care of creating, tagging, running, attaching, stopping, deleting containe
 
 [Info on Docker in VS](https://docs.microsoft.com/en-us/visualstudio/containers/?view=vs-2019)
 
-##  3. <a name='dockercommandlinestarters'></a>docker commandline starters
+##  docker commandline starters
 
-###  3.1. <a name='dockerbuild.'></a>docker build .
+###  docker build .
 
 Builds an image from the given folder ( . means current folder) -> don't do this in c:\!!
 This folder becomes the build context.
@@ -36,15 +36,21 @@ Here docker searches for dockerfile ( you can specify this file with -f paramete
 
 > Each line in DockerFile creates a new layer
 
-####  3.1.1. <a name='dockerbuild-tsidusermyApp:1.0.2.'></a>docker build -t siduser/myApp:1.0.2 .
+> If you don't give a name, Docker composes one like admiring_merkle: [link](https://anushibin.wordpress.com/2020/04/09/how-do-docker-containers-get-their-name/)
+
+
+####  docker build -t siduser/myApp:1.0.2 .
 
 Add tags to specify the version you are building
 You can add multiple tags to the same container  ( latest + version f.e.)
-###  3.2. <a name='dockerrunimage:tag'></a>docker run  image:tag
+###  docker run  image:tag
 
-##  4. <a name='DockerFile'></a>DockerFile
+To run powershell in that container interactively:   docker run -it  image:tag powershell
 
-###  4.1. <a name='Basicstructure:'></a>Basic structure:
+
+##  DockerFile
+
+###  Basic structure:
 
 > \# Comment
 > INSTRUCTION arguments
@@ -58,17 +64,45 @@ You can add multiple tags to the same container  ( latest + version f.e.)
 [Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 
 
-##  5. <a name='buildincontainer'></a>build in container
+##  Builds in container
 
-[Example](https://blog.alexellis.io/3-steps-to-msbuild-with-docker/) how to setup a docker to download and setup build tooling  
-[Corresponding gist](https://gist.github.com/alexellis/1bceff8a360515f44c566e1a0ba8885f)
+We need a base image and install tooling, chocolatey is popular
 
-Example with Choco installed, make sure you add the least changing layers first ( re-use layers later builds)
+Start with Choco installed, make sure you add the least changing layers first ( re-use layers later builds)
 
-Problem:
+Azure Devops build agent installers: [powershell scripts](https://github.com/akuryan/vsts-image-generation/tree/07a3c1f547a9a3304f965ed44d437f0d8d8d7589/images/win/scripts/Installers)
+F.e: install docker on container: [Install-Docker.ps1](https://github.com/akuryan/vsts-image-generation/blob/07a3c1f547a9a3304f965ed44d437f0d8d8d7589/images/win/scripts/Installers/Install-Docker.ps1)
+
+Error:
 iwr : The request was aborted: Could not create SSL/TLS secure channel
 
 Solution:
 Try TLS1.2
 [Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'
 
+Build container
+docker build -t examples/serverwithchoco:latest .
+Connect to container:
+docker run -it examples/serverwithchoco:latest powershell
+
+
+Alternative example:
+[Example](https://blog.alexellis.io/3-steps-to-msbuild-with-docker/) how to setup a docker to download and setup build tooling  
+[Corresponding gist](https://gist.github.com/alexellis/1bceff8a360515f44c566e1a0ba8885f)
+
+Alternative way of building containers: 
+> BuildKit is a toolkit for converting source code to build artifacts in an efficient, expressive and repeatable manner
+[github](https://github.com/moby/buildkit)  
+[blogpost](https://blog.mobyproject.org/introducing-buildkit-17e056cc5317)
+
+
+## Usefull things
+
+### Store all images and container to other drive
+
+Another option would be to create/modify the C:\ProgramData\Docker\config\daemon.json file as referenced in the getting started guide [here](https://msdn.microsoft.com/en-us/virtualization/windowscontainers/docker/configure_docker_daemon)
+```json
+{
+    "graph": "D:\\ProgramData\\Docker"
+}
+```
