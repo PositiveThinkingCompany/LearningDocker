@@ -20,6 +20,7 @@ Debugging with docker -> start container for my aplication ( tagged dev)
 
 VS opens the ip adress of the container with used portnumber.
 Append  api\values
+also exposed under localhost ( check Docker Desktop to find port)
 
 Building container is done through Microsoft. VisualStudio. Azure. Containers. Tools. Targets Nuget package.
 Takes care of creating, tagging, running, attaching, stopping, deleting containers based on latest code.
@@ -52,18 +53,26 @@ To run powershell in that container interactively:   docker run -it  image:tag p
 
 ###  Basic structure:
 
-> \# Comment
+``` Docker
+> # Comment
 > INSTRUCTION arguments
 
  FROM image
+ SHELL ["powershell"] # to avoid to use complete powershell command line for each command.
  RUN preparation step
  CMD executable
-
+```
 
 [Reference](https://docs.docker.com/engine/reference/builder/)  
 [Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+### Multi stage structure
+``` Docker
+From image as base
+RUN preparation
 
-
+From base
+RUN further preparation
+```
 ##  Builds in container
 
 We need a base image and install tooling, chocolatey is popular
