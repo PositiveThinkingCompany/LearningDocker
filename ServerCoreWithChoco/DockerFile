@@ -1,0 +1,5 @@
+FROM microsoft/windowsservercore:1803
+
+#Install Chocolately
+RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex" 
+#RUN @powershell -NoProfile -ExecutionPolicy unrestricted -Command "[Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'; choco install -y visualstudio2019buildtools"
