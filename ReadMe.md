@@ -64,8 +64,11 @@ INSTRUCTION arguments
 
  FROM image
  SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"] # Optional to use  powershell commands. This catches errors in scripts to continue silently with other steps.
+ ARG  key1=value1 (environment variable during build)
+ ENV  key2=value2 ( environment variable during build and in running container)
  RUN preparation step (runs during build -> layer)
- EXPOSE 80  ( exposes interal port 80 to outside, if external port is left out, docker chooses port)
+ EXPOSE 80  ( exposes interal port 80 to outside, if external port is left out, docker chooses port usually orgistrator -> so don't specify external port here for production, use docker-compose)
+ VOLUME ["/data"]
  CMD executable ( runs at start of container)
 ```
 
@@ -79,9 +82,19 @@ RUN preparation
 From base
 RUN further preparation
 ```
+
+## Docker-Compose
+
+Managing your images and starting them together
+
+### Docker-Compose.yml contents
+
+
 ##  Builds in container
 
 We need a base image and install tooling, chocolatey is popular
+
+### Using Choco
 
 Start with Choco installed, make sure you add the least changing layers first ( re-use layers later builds)
 
@@ -95,11 +108,22 @@ Solution:
 Try TLS1.2
 [Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'
 
+### installing VS2019 build tools
 Build container
 docker build -t examples/serverwithchoco:latest .
 Connect to container:
 docker run -it examples/serverwithchoco:latest powershell
 
+### Adding future build step of sources without having the sources already in place
+
+[ONBUILD](https://docs.docker.com/engine/reference/builder/#onbuild)
+Perform this build step in later builds for applications:
+
+```Docker
+ONBUILD ADD . /app/src
+ONBUILD RUN /usr/local/bin/python-build --dir /app/src
+```
+Usefull for standardized builder.
 
 Alternative example:
 [Example](https://blog.alexellis.io/3-steps-to-msbuild-with-docker/) how to setup a docker to download and setup build tooling  
