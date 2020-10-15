@@ -6,6 +6,9 @@
 * Setup Rest Api ( IIS hosted)
 * parse Dockerfile
 * Docker basics
+* Labs:    git clone https://github.com/docker/labs
+* Samples: git clone https://github.com/dockersamples/aspnet-monitoring
+
 
 ##  Setup Rest Api
 
@@ -54,13 +57,16 @@ To run powershell in that container interactively:   docker run -it  image:tag p
 ###  Basic structure:
 
 ``` Docker
-> # Comment
-> INSTRUCTION arguments
+# Comment like this
+
+#each line represents a build step -> move stable layers to top.
+INSTRUCTION arguments
 
  FROM image
- SHELL ["powershell"] # to avoid to use complete powershell command line for each command.
- RUN preparation step
- CMD executable
+ SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"] # Optional to use  powershell commands. This catches errors in scripts to continue silently with other steps.
+ RUN preparation step (runs during build -> layer)
+ EXPOSE 80  ( exposes interal port 80 to outside, if external port is left out, docker chooses port)
+ CMD executable ( runs at start of container)
 ```
 
 [Reference](https://docs.docker.com/engine/reference/builder/)  
@@ -115,3 +121,7 @@ Another option would be to create/modify the C:\ProgramData\Docker\config\daemon
     "graph": "D:\\ProgramData\\Docker"
 }
 ```
+
+### Running a externally availible registery
+
+[link](https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry)
