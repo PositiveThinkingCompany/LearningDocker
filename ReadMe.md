@@ -43,18 +43,19 @@ Docker can host both windows and linux containers at the same time.
 
 ###  2.1. <a name='Baseimages'></a>Base images
 
-For windows containers you have several base images from which you can start:
+For windows containers you have several base images ([link](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/container-base-images)) from which you can start:
 
 Nano Server ( .net Core support) --> 100Mb
-Server Core ( also .Net Full framework support) --> 1.5Gb [docker image](https://hub.docker.com/_/microsoft-windows-servercore)
-Windows Server( also support for DirectX, PrintServices,...) --> 3.57Gb [docker image](https://hub.docker.com/_/microsoft-windows)
+Server Core ( also .Net Full framework support), approx size:2-3Gb [docker image](https://hub.docker.com/_/microsoft-windows-servercore)
+Windows Server( also support for DirectX, PrintServices,...) approx size 8-12Gb [docker image](https://hub.docker.com/_/microsoft-windows)
 > Windows Server should be avoided to be used, only for full VM replacements if needed.
 
 To interact with a windows container:
-docker run -it 114ef6544763  powershell 
+> docker run -it 114ef6544763  powershell
+
 (Replace 114ef6544763 with the correct Id from your image)
 
-> Attention: Windows Container versions must be compatible with Host OS version in some usage cases [link](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/version-compatibility?tabs=windows-server-20H2%2Cwindows-10-20H2)
+> Attention: Windows Container versions must be compatible with Host OS version in some conditions [link](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/version-compatibility?tabs=windows-server-20H2%2Cwindows-10-20H2)
 
 ###  2.2. <a name='Hostwebservices'></a>Host webservices
 
@@ -66,8 +67,8 @@ This image contains:
 * .NET Framework (multiple versions available)
 * .NET Extensibility for IIS
 
-> For example to get a image with .NET 4.8 pre-installed
-docker pull mcr.microsoft.com/dotnet/framework/aspnet:4.8
+For example to get a image with .NET 4.8 pre-installed
+> docker pull mcr.microsoft.com/dotnet/framework/aspnet:4.8
 
 
 
