@@ -3,6 +3,8 @@
 <!-- vscode-markdown-toc -->
 * 1. [ Learning Plan](#LearningPlan)
 * 2. [Windows Containers](#WindowsContainers)
+	* 2.1. [Base images](#Baseimages)
+	* 2.2. [Host webservices](#Hostwebservices)
 * 3. [ Setup Rest Api](#SetupRestApi)
 * 4. [ docker commandline starters](#dockercommandlinestarters)
 	* 4.1. [ docker build .](#dockerbuild.)
@@ -39,7 +41,7 @@
 ##  2. <a name='WindowsContainers'></a>Windows Containers
 Docker can host both windows and linux containers at the same time.
 
-### Base images
+###  2.1. <a name='Baseimages'></a>Base images
 
 For windows containers you have several base images from which you can start:
 
@@ -54,7 +56,7 @@ docker run -it 114ef6544763  powershell
 
 > Attention: Windows Container versions must be compatible with Host OS version in some usage cases [link](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/version-compatibility?tabs=windows-server-20H2%2Cwindows-10-20H2)
 
-### Host webservices
+###  2.2. <a name='Hostwebservices'></a>Host webservices
 
 If we want a way to host an .NET Full framework web service, we can use aspnet [docker image](https://hub.docker.com/_/microsoft-dotnet-framework-aspnet)
 This image contains:
