@@ -8,10 +8,10 @@
 * 3. [ Setup Rest Api](#SetupRestApi)
 * 4. [ docker commandline starters](#dockercommandlinestarters)
 	* 4.1. [ docker build .](#dockerbuild.)
-		* 4.1.1. [ docker build -t siduser/myApp:1.0.2 .](#dockerbuild-tsidusermyApp:1.0.2.)
+		* 4.1.1. [Example for building versioned image](#Exampleforbuildingversionedimage)
 	* 4.2. [ docker run  image:tag](#dockerrunimage:tag)
 * 5. [ DockerFile](#DockerFile)
-	* 5.1. [ Basic structure:](#Basicstructure:)
+	* 5.1. [ Basic structure](#Basicstructure)
 	* 5.2. [Multi stage structure](#Multistagestructure)
 * 6. [Docker-Compose](#Docker-Compose)
 	* 6.1. [Docker-Compose.yml contents](#Docker-Compose.ymlcontents)
@@ -22,7 +22,7 @@
 * 8. [Usefull things](#Usefullthings)
 	* 8.1. [Store all images and container to other drive](#Storeallimagesandcontainertootherdrive)
 	* 8.2. [Running a externally availible registery](#Runningaexternallyavailibleregistery)
-	* 8.3. [External links:](#Externallinks:)
+	* 8.3. [External links](#Externallinks)
 
 <!-- vscode-markdown-toc-config
 	numbering=true
@@ -104,10 +104,11 @@ Here docker searches for dockerfile ( you can specify this file with -f paramete
 > If you don't give a name, Docker composes one like admiring_merkle: [link](https://anushibin.wordpress.com/2020/04/09/how-do-docker-containers-get-their-name/)
 
 
-####  4.1.1. <a name='dockerbuild-tsidusermyApp:1.0.2.'></a> docker build -t siduser/myApp:1.0.2 .
+####  4.1.1. <a name='Exampleforbuildingversionedimage'></a>Example for building versioned image
+> docker build -t siduser/myApp:1.0.2 .
 
-Add tags to specify the version you are building
-You can add multiple tags to the same container  ( latest + version f.e.)
+* Add tags to specify the version you are building
+* You can add multiple tags to the same container  ( latest + version f.e.
 ###  4.2. <a name='dockerrunimage:tag'></a> docker run  image:tag
 
 To run powershell in that container interactively:   docker run -it  image:tag powershell
@@ -115,7 +116,7 @@ To run powershell in that container interactively:   docker run -it  image:tag p
 
 ##  5. <a name='DockerFile'></a> DockerFile
 
-###  5.1. <a name='Basicstructure:'></a> Basic structure:
+###  5.1. <a name='Basicstructure'></a> Basic structure
 
 ``` Docker
 # Comment like this
@@ -212,6 +213,6 @@ Another option would be to create/modify the C:\ProgramData\Docker\config\daemon
 
 [link](https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry)
 
-###  8.3. <a name='Externallinks:'></a>External links:
+###  8.3. <a name='Externallinks'></a>External links
 
 [Migrate and mordernize with Kubernetes and Windows Container](https://www.youtube.com/watch?v=VJv-Jfs0fyk)
