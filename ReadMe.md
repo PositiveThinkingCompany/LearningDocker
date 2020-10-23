@@ -7,7 +7,7 @@
 	* [Host webservices](#Hostwebservices)
 * [ DockerFile](#DockerFile)
 	* [ Basic structure](#Basicstructure)
-* [ docker commandline starters](#dockercommandlinestarters)
+* [ Docker commandline starters](#Dockercommandlinestarters)
 	* [ docker build .](#dockerbuild.)
 		* [Example for building versioned image](#Exampleforbuildingversionedimage)
 	* [ docker run  image:tag](#dockerrunimage:tag)
@@ -15,6 +15,7 @@
 	* [Extracting content from image](#Extractingcontentfromimage)
 * [Docker-Compose](#Docker-Compose)
 	* [Docker-Compose.yml contents](#Docker-Compose.ymlcontents)
+* [Docker Volumes](#DockerVolumes)
 * [ Setup Rest Api](#SetupRestApi)
 * [ Builds in container](#Buildsincontainer)
 	* [Using Choco](#UsingChoco)
@@ -22,8 +23,9 @@
 	* [Adding future build step of sources without having the sources already in place](#Addingfuturebuildstepofsourceswithouthavingthesourcesalreadyinplace)
 * [Usefull things](#Usefullthings)
 	* [Store all images and container to other drive](#Storeallimagesandcontainertootherdrive)
+	* [Running  a database in a container](#Runningadatabaseinacontainer)
 	* [Running a externally availible registery](#Runningaexternallyavailibleregistery)
-	* [External links](#Externallinks)
+	* [Aditional links](#Aditionallinks)
 
 <!-- vscode-markdown-toc-config
 	numbering=false
@@ -33,12 +35,15 @@
 ## <a name='LearningPlan'></a> Learning Plan
 
 * Windows Containers
+* Docker installation
 * parse Dockerfile
 * Docker basics
 * Labs:    git clone https://github.com/docker/labs
 * Samples: git clone https://github.com/dockersamples/aspnet-monitoring
 * Setup Rest Api ( IIS hosted)
 * Build inside containers
+* Docker Compose
+* Docker volumes
 
 ## <a name='WindowsContainers'></a>Windows Containers
 Docker can host both windows and linux containers at the same time.
@@ -47,8 +52,8 @@ Docker can host both windows and linux containers at the same time.
 
 For windows containers you have several base images ([link](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/container-base-images)) from which you can start:
 
-Nano Server ( .net Core support) --> 100Mb
-Server Core ( also .Net Full framework support), approx size:2-3Gb [docker image](https://hub.docker.com/_/microsoft-windows-servercore)
+Nano Server ( .net Core support) --> 100Mb  
+Server Core ( also .Net Full framework support), approx size:2-3Gb [docker image](https://hub.docker.com/_/microsoft-windows-servercore)  
 Windows Server( also support for DirectX, PrintServices,...) approx size 8-12Gb [docker image](https://hub.docker.com/_/microsoft-windows)
 > Windows Server should be avoided to be used, only for full VM replacements if needed.
 
@@ -92,14 +97,14 @@ INSTRUCTION arguments
  RUN preparation step (runs during build -> layer)
  EXPOSE 80  ( exposes interal port 80 to outside, if external port is left out, docker chooses port usually orgistrator -> so don''t specify external port here for production, use docker-compose)
  ONBUILD instruction #this instruction will be done in derived image builds (re-use this image)
- VOLUME ["/data"]
+ VOLUME ["/data"] #if the volume doesn't exist, docker will create the volume on the local disk
  CMD executable ( runs at start of container)
 ```
 
 [Reference](https://docs.docker.com/engine/reference/builder/)  
 [Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 
-## <a name='dockercommandlinestarters'></a> docker commandline starters
+## <a name='Dockercommandlinestarters'></a> Docker commandline starters
 
 ### <a name='dockerbuild.'></a> docker build .
 
@@ -166,7 +171,7 @@ RUN App.exe
 
 ### <a name='Extractingcontentfromimage'></a>Extracting content from image
 We can retreive the build output from the image by creating a container ( not run) and ask to copy the folder).
-> docker create --name testingconsole-1 examples/testingconsole
+> docker create --name testingconsole-1 examples/testingconsole  
 > docker cp testingconsole-1:C:\\\\app\\\\ .\\\\app\\\\
 
 ## <a name='Docker-Compose'></a>Docker-Compose
@@ -176,22 +181,33 @@ Managing your images and starting them together
 [Reference](https://docs.docker.com/compose/compose-file/)
 ### <a name='Docker-Compose.ymlcontents'></a>Docker-Compose.yml contents
 
+
+## <a name='DockerVolumes'></a>Docker Volumes
+
+Volumes can be managed like images and containers.  
+They exists separate from containers.
+
+List docker volume
+> docker volume ls
+
+[Reference](https://docs.docker.com/storage/volumes/)
+
 ## <a name='SetupRestApi'></a> Setup Rest Api
 
 Create new project in VS2019: . NET Full Framework Web Application for Web API, I choose with docker and https support.
 Enabling Docker Support here triggered the download of the required layers.
 Image aspnet  --> 8.4Gb
 
-Removed MVC unnecessary parts
+Removed MVC unnecessary parts  
 Added basic .gitignore file ( search for Visual Studio gitignore)
 
 Debugging with docker -> start container for my aplication ( tagged dev)
 
-VS opens the ip adress of the container with used portnumber.
-Append  api\values
+VS opens the ip adress of the container with used portnumber.  
+Append  api\values  
 also exposed under localhost ( check Docker Desktop to find port)
 
-Building container is done through Microsoft. VisualStudio. Azure. Containers. Tools. Targets Nuget package.
+Building container is done through Microsoft. VisualStudio. Azure. Containers. Tools. Targets Nuget package.  
 Takes care of creating, tagging, running, attaching, stopping, deleting containers based on latest code.
 
 [Info on Docker in VS](https://docs.microsoft.com/en-us/visualstudio/containers/?view=vs-2019)
@@ -215,9 +231,10 @@ Try TLS1.2
 [Net.ServicePointManager]::SecurityProtocol = 'tls12, tls11, tls'
 
 ### <a name='installingVS2019buildtools'></a>installing VS2019 build tools
-Build container
-docker build -t examples/serverwithchoco:latest .
-Connect to container:
+
+Build container  
+docker build -t examples/serverwithchoco:latest .  
+Connect to container:  
 docker run -it examples/serverwithchoco:latest powershell
 
 ### <a name='Addingfuturebuildstepofsourceswithouthavingthesourcesalreadyinplace'></a>Adding future build step of sources without having the sources already in place
@@ -251,13 +268,19 @@ Another option would be to create/modify the C:\ProgramData\Docker\config\daemon
     "data-root": "D:\\ProgramData\\Docker"
 }
 ```
+### <a name='Runningadatabaseinacontainer'></a>Running  a database in a container
+
+> docker run --name demodb -d -p 1433:1433 -e sa_password=azurePASSWORD123 -e ACCEPT_EULA=Y microsoft/mssql-server-windows-express
 
 ### <a name='Runningaexternallyavailibleregistery'></a>Running a externally availible registery
 
 [link](https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry)
 
-### <a name='Externallinks'></a>External links
+### <a name='Aditionallinks'></a>Aditional links
 
 * [Migrate and mordernize with Kubernetes and Windows Container](https://www.youtube.com/watch?v=VJv-Jfs0fyk)
 * [Docker MVP](https://blog.sixeyed.com/)
 * [Example Docker images for windows](https://github.com/sixeyed/dockerfiles-windows)
+* Docker is built of an industry standard for Containers --> [Containerd](https://containerd.io/).   
+Because of this, containers built by docker are 
+useable by other container technologies(Kubernetes, Podman etc)
