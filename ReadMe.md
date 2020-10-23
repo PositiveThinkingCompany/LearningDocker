@@ -2,6 +2,8 @@
 # Learning Docker
 <!-- vscode-markdown-toc -->
 * [ Learning Plan](#LearningPlan)
+* [Docker Concepts](#DockerConcepts)
+	* [Writeable layer vs Volumes](#WriteablelayervsVolumes)
 * [Windows Containers](#WindowsContainers)
 	* [Base images](#Baseimages)
 	* [Host webservices](#Hostwebservices)
@@ -44,6 +46,19 @@
 * Build inside containers
 * Docker Compose
 * Docker volumes
+
+## <a name='DockerConcepts'></a>Docker Concepts
+
+
+### <a name='WriteablelayervsVolumes'></a>Writeable layer vs Volumes
+
+The filesystem in a container gets a certain size by default ( 20Gb?)  
+When we change a file in the container, this doesn't change the image.  
+Instead the change is written in the writeable layer.  
+If you would change the registry, a copy would be made and saved to the writeable layer. This layer only belongs to the running container.
+
+This layer is not the same as an attached volume, which points to an external storage device. When you change something in the volume, this is permanent.
+
 
 ## <a name='WindowsContainers'></a>Windows Containers
 Docker can host both windows and linux containers at the same time.
