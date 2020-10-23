@@ -272,6 +272,8 @@ Another option would be to create/modify the C:\ProgramData\Docker\config\daemon
 
 > docker run --name demodb -d -p 1433:1433 -e sa_password=azurePASSWORD123 -e ACCEPT_EULA=Y microsoft/mssql-server-windows-express
 
+When the container is running, you can connect to it with localhost\SQLEXPRESS
+
 ### <a name='Runningaexternallyavailibleregistery'></a>Running a externally availible registery
 
 [link](https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry)
