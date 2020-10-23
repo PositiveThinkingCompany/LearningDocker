@@ -1,0 +1,62 @@
+#!markdown
+
+# Docker Demo with .NET Interactive plugin for VS Code
+
+This document shows an example of how to work with Docker from a .NET Client.  
+
+More info on .NET Interactive : [link](https://github.com/dotnet/interactive)
+Install the extension from the Marketplace [link](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.dotnet-interactive-vscode)
+
+#!markdown
+
+Some setup code not related to Docker  
+We import morelinq for the ForEach enumerator on IEnumerable.  
+Normally only  List<> has this operator.
+
+#!csharp
+
+#r "nuget:morelinq"
+using MoreLinq;
+
+//Can't define extentions methods in nested static class, so this doesn't work in cell
+// public static class StringExtensions
+// {
+//     public static void Print(this object obj)
+//     {
+//         Console.WriteLine(obj);
+//     }
+// }
+
+#!markdown
+
+Import the Docker .NET client  nuget package and setup the namespaces
+
+#!csharp
+
+#r "nuget:Docker.DotNet"
+using Docker.DotNet;
+using Docker.DotNet.Models;
+
+#!csharp
+
+DockerClient client = new DockerClientConfiguration()
+     .CreateClient();
+
+#!csharp
+
+var version = await client.System.GetVersionAsync();
+Console.WriteLine(version.Os);
+Console.WriteLine(version.KernelVersion);
+Console.WriteLine(version.Version);
+Console.WriteLine(version.Experimental);
+
+#!csharp
+
+var containers = await client.Containers.ListContainersAsync(new ContainersListParameters(){
+    Limit = 10,
+});
+containers.ForEach(c => Console.WriteLine(c.Names.First()));
+
+#!csharp
+
+#!lsmagic
