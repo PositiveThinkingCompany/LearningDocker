@@ -49,16 +49,51 @@
 
 ## <a name='DockerConcepts'></a>Docker Concepts
 
+An quick summary of important terms
 
-### <a name='WriteablelayervsVolumes'></a>Writeable layer vs Volumes
+**Docker**
+> Docker is an open source container technology, based on industry standards.
 
-The filesystem in a container gets a certain size by default ( 20Gb?)  
+**Docker API**  
+> Docker exposes an rest api to handle all interactions with the docker daemon/service.   
+
+**Docker image**
+> A Docker image represents a collections of layers starting from an base os with additional modifications built on top.  
+
+**Docker container**
+> A docker container is an instance of an image hosted by the docker runtime on a host OS.  
+
+**Docker compose**
+> A way of running some dependent containers together on an single machine. Usually used in production.  
+It's of describing how you want the containers to be launch in a certain environment.  
+
+
+**Docker Swarm**
+>  A way of managing  Docker containers in a distributed fashion. Needs multiple Servers or at least virtual machines  
+
+**Kubernetes**
+>  An container orchestrator that can work with Docker containers but not limited to that. ( Containerd standard)  
+
+**Docker Volume**
+> Docker can mount external storage as volumes to containers to provide permanent storage ( database data file f.e.)
+You create a Volume seperately and refer to them in your containers. 
+If a container asks for a volume which doesn't exist, Docker will create one behind the scenes.
+
+
+**Writeable layer**
+
+> A container can not change it's image, but it want to write to existing files,  
+it gets duplicated in a writeble layer, usually referred to as Scratch Space.  
+The C: drive in a Windows container represents a virtual free size of 20GB.  
 When we change a file in the container, this doesn't change the image.  
-Instead the change is written in the writeable layer.  
-If you would change the registry, a copy would be made and saved to the writeable layer. This layer only belongs to the running container.
+This layer is individual for each container and not shared!  
+This layer is not the same as an attached volume, which points to an external storage device.  
+When you change something in the volume, this is permanent.
 
-This layer is not the same as an attached volume, which points to an external storage device. When you change something in the volume, this is permanent.
 
+
+**Docker Network**
+> docker containers can talk to each other by their given docker name. Docker runtime acts as a kind of DNS.
 
 ## <a name='WindowsContainers'></a>Windows Containers
 Docker can host both windows and linux containers at the same time.
