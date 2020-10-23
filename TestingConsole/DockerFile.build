@@ -6,7 +6,7 @@ WORKDIR c:\\app
 COPY . .
 RUN msbuild TestingConsole.csproj /p:OutputPath=c:\out
 
-FROM mcr.microsoft.com/dotnet/framework/aspnet:4.8-windowsservercore-ltsc2019
+FROM mcr.microsoft.com/dotnet/framework/runtime:4.8
 WORKDIR c:\\MYProgram
 COPY --from=builder C:\\out .
 
