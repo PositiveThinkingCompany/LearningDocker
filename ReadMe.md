@@ -135,9 +135,6 @@ Here docker searches for DockerFile ( you could specify this file with -f parame
 
 > Each line in DockerFile creates a new layer
 
-> If you don't give a name, Docker composes one like admiring_merkle: [link](https://anushibin.wordpress.com/2020/04/09/how-do-docker-containers-get-their-name/)
-
-
 #### <a name='Exampleforbuildingversionedimage'></a>Example for building versioned image
 
 Build in the current folder
@@ -177,6 +174,9 @@ If you want to know resource usage of the container
 
 If you want to remove a container ( even running)
 > docker container rm -f 1267DE4F6B09
+
+> If you don't give a name for the container, Docker invents one like admiring_merkle: [link](https://anushibin.wordpress.com/2020/04/09/how-do-docker-containers-get-their-name/)
+
 
 ### <a name='Buildingsoftwareinsidecontainer'></a> Building software inside container
 
