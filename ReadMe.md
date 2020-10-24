@@ -1,9 +1,7 @@
 
 # Learning Docker
 <!-- vscode-markdown-toc -->
-* [ Learning Plan](#LearningPlan)
 * [Docker Concepts](#DockerConcepts)
-	* [Writeable layer vs Volumes](#WriteablelayervsVolumes)
 * [Windows Containers](#WindowsContainers)
 	* [Base images](#Baseimages)
 	* [Host webservices](#Hostwebservices)
@@ -34,18 +32,7 @@
 	autoSave=true
 	/vscode-markdown-toc-config -->
 <!-- /vscode-markdown-toc -->
-## <a name='LearningPlan'></a> Learning Plan
 
-* Windows Containers
-* Docker installation
-* parse Dockerfile
-* Docker basics
-* Labs:    git clone https://github.com/docker/labs
-* Samples: git clone https://github.com/dockersamples/aspnet-monitoring
-* Setup Rest Api ( IIS hosted)
-* Build inside containers
-* Docker Compose
-* Docker volumes
 
 ## <a name='DockerConcepts'></a>Docker Concepts
 
@@ -68,16 +55,24 @@ Docker Network |Docker containers can talk to each other by their given docker n
 
 
 ## <a name='WindowsContainers'></a>Windows Containers
-Docker can host both windows and linux containers at the same time.
+
+Docker can host both windows and linux containers at the same time.  
+(You no longer need to switch between hosted eiter one of them)
+
+It's possible you need specify the platform when requesting an image 
+> docker image pull --platform linux  ubuntu
+
 
 ### <a name='Baseimages'></a>Base images
 
 For windows containers you have several base images ([link](https://docs.microsoft.com/en-us/virtualization/windowscontainers/manage-containers/container-base-images)) from which you can start:
 
-Nano Server ( .net Core support) --> 100Mb  
-Server Core ( also .Net Full framework support), approx size:2-3Gb [docker image](https://hub.docker.com/_/microsoft-windows-servercore)  
-Windows Server( also support for DirectX, PrintServices,...) approx size 8-12Gb [docker image](https://hub.docker.com/_/microsoft-windows)
-> Windows Server should be avoided to be used, only for full VM replacements if needed.
+Name | Description | Approx. size | Docker Image
+-|-|-|-
+Nano Server | .net Core support  | 100Mb  
+Server Core | also .Net Full framework support| size:2-3Gb |[link](https://hub.docker.com/_/microsoft-windows-servercore)  
+Windows Server| also support for DirectX, PrintServices,...| 8-12Gb |[link](https://hub.docker.com/_/microsoft-windows)
+> Windows Server should be avoided to be used, only for full VM replacements if Server Core doesn't support it's needs.
 
 To interact with a windows container:
 > docker run -it 114ef6544763  powershell
@@ -86,7 +81,11 @@ To interact with a windows container:
 
 > Attention: Windows Container versions must be compatible with Host OS version in some conditions [link](https://docs.microsoft.com/en-us/virtualization/windowscontainers/deploy-containers/version-compatibility?tabs=windows-server-20H2%2Cwindows-10-20H2)
 
->Windows 10 Host ->  can't take latest windows versions -> tag 1803 worked
+Windows 10 Host ->  couldn't take latest windows version -> tag 1803 worked for my  OS
+
+> Attention: Microsoft has been moving their images to their own docker registry, so some images can exist with diffent namespaces
+
+Use ```mcr.microsoft.com/windows/servercore``` instead of   ```microsoft/windows/servercore```
 
 ### <a name='Hostwebservices'></a>Host webservices
 
@@ -132,7 +131,7 @@ INSTRUCTION arguments
 
 Builds an image from the given folder ( . means current folder) -> don't do this in c:\!!
 This folder becomes the build context.
-Here docker searches for dockerfile ( you can specify this file with -f parameter if elsewhere)
+Here docker searches for DockerFile ( you could specify this file with -f parameter if elsewhere)
 
 > Each line in DockerFile creates a new layer
 
@@ -140,8 +139,11 @@ Here docker searches for dockerfile ( you can specify this file with -f paramete
 
 
 #### <a name='Exampleforbuildingversionedimage'></a>Example for building versioned image
+
+Build in the current folder
 > docker build -t siduser/myApp:1.0.2 .
 
+* a DockerFile is expect in the folder
 * Add tags to specify the version you are building
 * You can add multiple tags to the same container  ( latest + version f.e.
 ### <a name='dockerrunimage:tag'></a> docker run  image:tag
@@ -192,9 +194,22 @@ RUN App.exe
 ```
 
 ### <a name='Extractingcontentfromimage'></a>Extracting content from image
-We can retreive the build output from the image by creating a container ( not run) and ask to copy the folder).
+
+Example with TestingConsole makes an image with the console program copied from the builder to the final image.
+
+We can retreive the build output from the image by creating a container ( not run it) and ask to copy the folder).
 > docker create --name testingconsole-1 examples/testingconsole  
 > docker cp testingconsole-1:C:\\\\app\\\\ .\\\\app\\\\
+
+We could run the container to let the program run too.
+> docker container run -d examples/testingconsole TestingConsole.exe
+
+But after our program has finished, the container stops again.  
+How do we now the program did it's job?
+> docker container logs bea15qdf
+
+*Hello Arcelor*
+
 
 ## <a name='Docker-Compose'></a>Docker-Compose
 
@@ -292,9 +307,16 @@ Another option would be to create/modify the C:\ProgramData\Docker\config\daemon
 ```
 ### <a name='Runningadatabaseinacontainer'></a>Running  a database in a container
 
+For this demo we run straigth from the default image.
 > docker run --name demodb -d -p 1433:1433 -e sa_password=azurePASSWORD123 -e ACCEPT_EULA=Y microsoft/mssql-server-windows-express
 
 When the container is running, you can connect to it with localhost\SQLEXPRESS
+
+Attenttion: After the initial run, you don't have to add all the parameters.
+> docker run demodb 
+
+This will start the existing container again and the environment variables and port assignments remain in place.
+
 
 ### <a name='Runningaexternallyavailibleregistery'></a>Running a externally availible registery
 
@@ -308,3 +330,5 @@ When the container is running, you can connect to it with localhost\SQLEXPRESS
 * Docker is built of an industry standard for Containers --> [Containerd](https://containerd.io/).   
 Because of this, containers built by docker are 
 useable by other container technologies(Kubernetes, Podman etc)
+* Labs:    git clone https://github.com/docker/labs
+* Samples: git clone https://github.com/dockersamples/aspnet-monitoring
