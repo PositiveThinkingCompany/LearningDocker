@@ -182,8 +182,15 @@ If you want to remove a container ( even running)
 
 [docker sdk image](https://hub.docker.com/_/microsoft-dotnet-framework-sdk)  
 [msbuild docker image example](https://github.com/NuGardt/docker-msbuild)
+[.NET Microservices: Architecture for Containerized .NET Applications](https://docs.microsoft.com/en-us/dotnet/architecture/microservices/)
 ``` Docker
 From buildimage as build
+
+#Separate package download from building sources
+#avoid download same packages again and again! 
+COPY packagefiles . #.csproj / package.config
+CMD nuget restore / dotnet restore/npm install
+
 COPY Sources  .
 RUN build command to build app
 
@@ -229,6 +236,16 @@ They exists separate from containers.
 
 List docker volume
 > docker volume ls
+
+**Bind Mounts are not Volumes**
+
+Volumes are permanent storage on the host that Docker is aware of.  
+Bind mounts are direct connections to storage on the host.  
+With Volumes a location is the docker container is made to represent the storage.  
+With bind mount, you go directly to the host storage location.
+
+If a Volume doesn't exist, Docker will create one for you.
+If a bind mount location doesn't exist, Docker will throw an error.
 
 [Reference](https://docs.docker.com/storage/volumes/)
 
@@ -323,7 +340,9 @@ This will start the existing container again and the environment variables and p
 
 ### <a name='Runningaexternallyavailibleregistery'></a>Running a externally availible registery
 
-[link](https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry)
+* Setting up a  registry: [link](https://docs.docker.com/registry/deploying/#run-an-externally-accessible-registry)
+* Running an registery in Azure: [link](https://docs.microsoft.com/en-us/azure/container-registry/container-registry-intro)
+  * Build and push to Azure registry: [link](https://docs.microsoft.com/en-us/azure/devops/pipelines/ecosystems/containers/acr-template?view=azure-devops)
 
 ### <a name='Aditionallinks'></a>Aditional links
 
