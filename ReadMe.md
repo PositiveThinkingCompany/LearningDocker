@@ -197,15 +197,18 @@ RUN App.exe
 
 Example with TestingConsole makes an image with the console program copied from the builder to the final image.
 
+Make the image:
+>docker build -t examples/testingconsole:latest -f DockerFile.build .
+
 We can retreive the build output from the image by creating a container ( not run it) and ask to copy the folder).
-> docker create --name testingconsole-1 examples/testingconsole  
-> docker cp testingconsole-1:C:\\\\app\\\\ .\\\\app\\\\
+> docker create --name testing examples/testingconsole  
+> docker cp testing:C:\\\\app\\\\ .\\\\app\\\\
 
 We could run the container to let the program run too.
 > docker container run -d examples/testingconsole TestingConsole.exe
 
 But after our program has finished, the container stops again.  
-How do we now the program did it's job?
+How do we know the program did its job?
 > docker container logs bea15qdf
 
 *Hello Arcelor*
